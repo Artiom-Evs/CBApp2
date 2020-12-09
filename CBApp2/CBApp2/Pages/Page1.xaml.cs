@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace CBApp2.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AppShellaml : ContentPage
+    public partial class Page1 : ContentPage
     {
-        public AppShellaml()
+        public Page1()
         {
             InitializeComponent();
         }
