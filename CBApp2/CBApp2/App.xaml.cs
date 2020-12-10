@@ -10,7 +10,7 @@ namespace CBApp2
         {
             InitializeComponent();
 
-            MainPage = new Pages.AppShell();
+            MainPage = new AppShell();
         }
 
         protected override void OnStart()

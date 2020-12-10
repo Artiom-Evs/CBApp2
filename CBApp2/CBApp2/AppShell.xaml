@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://xamarin.com/schemas/2014/forms"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:pages="clr-namespace:CBApp2.Pages"
+       x:Class="CBApp2.AppShell"
+       Title="Главная">
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label" 
+                   BaseResourceKey="headerLabel" 
+                   ApplyToDerivedTypes="False" Class="Label">
+                <Setter Property="TextColor" Value="Black"/>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <Shell.FlyoutHeader>
+        <StackLayout Padding="10" BackgroundColor="White">
+            <Label Text="ffgsgh"/>
+            <Image Source="launcher_foreground.png" HeightRequest="100"/>
+            <Label Text="ColledgeBrowser" 
+                   HorizontalTextAlignment="Center"
+                   Style="{DynamicResource Key=headerLabel}"/>
+            <Label Text="Приветствует вас!" 
+                   HorizontalTextAlignment="Center"
+                   Style="{DynamicResource Key=headerLabel}"/>
+        </StackLayout>
+    </Shell.FlyoutHeader>
+
+    <Shell.Items>
+        <FlyoutItem Title="Расписание групп" 
+                    Icon="icon.png"
+                    Route="groups">
+            <Tab Title="НепонятноЧто!">
+                <ShellContent>
+                    <pages:Page1/>
+                </ShellContent>
+            </Tab>
+        </FlyoutItem>
+        <FlyoutItem Title="Расписание преподавателей" 
+                    Icon="icon.png"
+                    Route="teachers">
+            <Tab Title="НепонятноЧто2">
+                <ShellContent>
+                    <pages:Page2/>
+                </ShellContent>
+            </Tab>
+        </FlyoutItem>
+
+        <MenuItem Text="Меню" 
+                  IconImageSource="icon.png" 
+                  Clicked="MenuItem_Clicked"/>
+        <MenuItem Text="Выход"
+                  IconImageSource="icon.png" 
+                  Clicked="MenuItem_Clicked_1"/>
+    </Shell.Items>
+</Shell>
