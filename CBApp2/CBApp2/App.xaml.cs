@@ -6,6 +6,14 @@ namespace CBApp2
 {
     public partial class App : Application
     {
+        public static bool Connection
+        {
+            get
+            {
+                return DependencyService.Get<Services.IConnectionInfo>().IsConnected;
+            }
+        }
+
         public App()
         {
             InitializeComponent();
