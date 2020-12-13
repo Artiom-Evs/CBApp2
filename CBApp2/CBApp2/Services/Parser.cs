@@ -11,20 +11,18 @@ using AngleSharp.Dom;
 
 using CBApp2.Domain.Models;
 
-namespace CBApp2.Domain.Services
+//namespace CBApp2.Domain.Services
+namespace CBApp2
 {
     public class Parser
     {
         private string _filePage;
-        private string _fileoldGroups;
-
         public Parser(string path)
         {
-            this._filePage = Path.Combine(path, "page.html");
-            this._fileoldGroups = Path.Combine(path, "oldGroups.html");
+            this._filePage = path;
         }
 
-        public async Task<string> GetPageTextAsync(string path)
+        public string GetPageText(string path)
         {
             if (File.Exists(path))
             {
@@ -32,7 +30,7 @@ namespace CBApp2.Domain.Services
                 {
                     using (StreamReader sr = new StreamReader(fs))
                     {
-                        return await sr.ReadToEndAsync();
+                        return sr.ReadToEnd();
                     }
                 }
             }
@@ -41,10 +39,72 @@ namespace CBApp2.Domain.Services
                 throw new FileNotFoundException("Файл не был загружен.");
             }
         }
-        public async Task<List<Models.Element>> ParsePage(bool isGroup)
+        public Task<string> GetPageTextAsync(string path)
+        {
+            if (File.Exists(path))
+            {
+                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    using (StreamReader sr = new StreamReader(fs))
+                    {
+                        return sr.ReadToEndAsync();
+                    }
+                }
+            }
+            else
+            {
+                throw new FileNotFoundException("Файл не был загружен.");
+            }
+        }
+
+        public List<CBApp2.Domain.Models.Element> ParsePage(bool isGroup)
+        {
+            //string PageText = GetPageTextAsync(_filePage).Result;
+            string PageText = GetPageText(_filePage);
+            List<CBApp2.Domain.Models.Element> groups = new List<CBApp2.Domain.Models.Element>();
+            List<string> names = new List<string>();
+            List<string> dates = new List<string>();
+            List<Task<Week>> tables = new List<Task<Week>>();
+
+            var config = Configuration.Default;
+            var context = BrowsingContext.New(config);
+            var document = context.OpenAsync(req => req.Content(PageText)).Result;
+            var doc = document.DocumentElement;
+
+            foreach (var elem in doc.GetElementsByTagName("tbody"))
+            {
+                tables.Add(Task<Week>.Run(() => ParseTable(elem)));
+            }
+            foreach (var elem in doc.GetElementsByTagName("h2"))
+            {
+                names.Add(elem.Text());
+            }
+            foreach (var elem in doc.GetElementsByTagName("h3"))
+            {
+                dates.Add(elem.Text());
+
+            }
+            for (int i = 0; i < names.Count; i++)
+            {
+                CBApp2.Domain.Models.Element element = new CBApp2.Domain.Models.Element();
+                Week week = tables[i].Result;
+
+                element.Name = names[i];
+                week.Element = element;
+                week.Name = dates[i];
+                week.CreateDate = DateTime.Now.ToFileTime();
+                element.Week = week;
+                element.IsGroup = isGroup;
+
+                groups.Add(element);
+            }
+
+            return groups;
+        }
+        public async Task<List<CBApp2.Domain.Models.Element>> ParsePageAsync(bool isGroup)
         {
             string PageText = await GetPageTextAsync(_filePage);
-            List<Models.Element> groups = new List<Models.Element>();
+            List<CBApp2.Domain.Models.Element> groups = new List<CBApp2.Domain.Models.Element>();
             List<string> names = new List<string>();
             List<string> dates = new List<string>();
             List<Task<Week>> tables = new List<Task<Week>>();
@@ -69,7 +129,7 @@ namespace CBApp2.Domain.Services
             }
             for (int i = 0; i < names.Count; i++)
             {
-                Models.Element element = new Models.Element();
+                CBApp2.Domain.Models.Element element = new CBApp2.Domain.Models.Element();
                 Week week = tables[i].Result;
 
                 element.Name = names[i];
@@ -85,6 +145,7 @@ namespace CBApp2.Domain.Services
             //Console.WriteLine("Парсинг завершён!");
             return groups;
         }
+
         public Week ParseTable(IElement table)
         {
             Week week = new Week();

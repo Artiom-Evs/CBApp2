@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+
+using CBApp2.Domain.Services;
 
 namespace CBApp2
 {
@@ -15,6 +18,11 @@ namespace CBApp2
         public AppShell()
         {
             InitializeComponent();
+        }
+
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
         }
 
         private async void MenuItem_Clicked(object sender, EventArgs e)
