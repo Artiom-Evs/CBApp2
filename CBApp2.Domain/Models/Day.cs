@@ -20,7 +20,10 @@ namespace CBApp2.Domain.Models
 
         public override string ToString()
         {
-            return Name;
+            return DateTime.Parse(Name).ToString("dddd")[0].ToString().ToUpper() 
+                + DateTime.Parse(Name).ToString("dddd")
+                .Substring(1, DateTime.Parse(Name).ToString("dddd")
+                .Length - 1) + ", " + DateTime.Parse(Name).ToString("dd MMMM");
         }
     }
 }

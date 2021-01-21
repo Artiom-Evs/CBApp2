@@ -18,11 +18,14 @@ namespace CBApp2.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Page1 : ContentPage
     {
-        private List<Domain.Models.Element> Groups { get; set; } = 
+        private List<Domain.Models.Element> Items { get; set; } = 
             new List<Domain.Models.Element>();
+
+        ActivityIndicator activityIndicator = new ActivityIndicator();
 
         public Page1()
         {
+            //this.FindByName<StackLayout>("mainStack").Children.Add(activityIndicator);
             InitializeComponent();
         }
 
@@ -30,49 +33,27 @@ namespace CBApp2.Pages
         {
             base.OnAppearing();
 
-            if (App.Connection)
+            if (!App.LoadGroups.Result)
             {
-                string page = Path.Combine(App.LocalFolderPath, "groups_page.html");
-                string address = @"http://mgke.minsk.edu.by/ru/main.aspx?guid=3791";
-
-                if (File.Exists(page)) File.Delete(page);
-
-                using (System.Net.WebClient client = new System.Net.WebClient())
-                {
-                    client.DownloadFile(address, page);
-                }
-
-                if (!File.Exists(page))
-                {
-                    await DisplayAlert("", "Не удалось получить данные с сайта МГКЭ!", "OK");
-                }
-                else
-                {
-                    await DisplayAlert("", "Страницы успешно загружены!", "OK");
-                }
+                await DisplayAlert("", "Не удалось получить данные с сайта МГКЭ!\nБудет использована последняя загруженная версия.", "OK");
             }
-            else
-            {
-                await DisplayAlert("", "Отсутствует подключение к сети Интернет!", "OK");
-            }
-
-            Parser parser = new Parser(Path.Combine(App.LocalFolderPath, "groups_page.html"));
-            var list = parser.ParsePage(true);
 
             using (DataContext db = new DataContext())
             {
-                await db.AddRangeAsync(list);
-                await db.SaveChangesAsync();
-
-                //this.FindByName<ListView>("listVIew_1").ItemsSource = db.Elements.Where(e => e.IsGroup == true);
+                Items = db.Elements.Where(e => e.IsGroup == true).ToList();
             }
 
-
+            this.FindByName<ListView>("MyListView").ItemsSource = Items;
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
+        }
+
+        private async void MyListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            await Navigation.PushAsync(new Pages.DaysViewPage1(e.Item as CBApp2.Domain.Models.Element));
         }
     }
 }

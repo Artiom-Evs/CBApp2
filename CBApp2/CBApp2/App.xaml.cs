@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,6 +12,8 @@ namespace CBApp2
         public static string LocalFolderPath { get; } =
             Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         public static string DatabasePath { get; } = Path.Combine(LocalFolderPath, "database.db");
+        public static Task<bool> LoadGroups, LoadTeachers;
+
         public static bool Connection
         {
             get
@@ -22,7 +26,9 @@ namespace CBApp2
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            //File.Delete(DatabasePath);
+            
+            //MainPage = new AppShell();
         }
 
         protected override void OnStart()

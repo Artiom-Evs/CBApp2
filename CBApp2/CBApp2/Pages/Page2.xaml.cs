@@ -8,11 +8,18 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using CBApp2.Infrastructure.Services;
+using CBApp2.Domain.Services;
+using CBApp2.Domain.Models;
+
 namespace CBApp2.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Page2 : ContentPage
     {
+        private List<Domain.Models.Element> Items { get; set; } =
+            new List<Domain.Models.Element>();
+
         public Page2()
         {
             InitializeComponent();
@@ -22,31 +29,22 @@ namespace CBApp2.Pages
         {
             base.OnAppearing();
 
-            if (App.Connection)
+            if (!App.LoadTeachers.Result)
             {
-                string page = Path.Combine(App.LocalFolderPath, "teachers_page.html");
-                string address = @"http://mgke.minsk.edu.by/ru/main.aspx?guid=3811";
-
-                if (File.Exists(page)) File.Delete(page);
-
-                using (System.Net.WebClient client = new System.Net.WebClient())
-                {
-                    client.DownloadFile(address, page);
-                }
-
-                if (!File.Exists(page))
-                {
-                    await DisplayAlert("", "Не удалось получить данные с сайта МГКЭ!", "OK");
-                }
-                else
-                {
-                    await DisplayAlert("", "Страницы успешно загружены!", "OK");
-                }
+                await DisplayAlert("", "Не удалось получить данные с сайта МГКЭ!\nБудет использована последняя загруженная версия.", "OK");
             }
-            else
+
+            using (DataContext db = new DataContext())
             {
-                await DisplayAlert("", "Отсутствует подключение к сети Интернет!", "OK");
+                Items = db.Elements.Where(e => e.IsGroup == false).OrderBy(e => e.Name).ToList();
             }
+
+            this.FindByName<ListView>("MyListView").ItemsSource = Items;
+        }
+
+        private async void MyListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            await Navigation.PushAsync(new Pages.DaysViewPage1(e.Item as CBApp2.Domain.Models.Element));
         }
     }
 }

@@ -17,7 +17,7 @@
 
     <Shell.FlyoutHeader>
         <StackLayout Padding="10" BackgroundColor="White">
-            <Label Text="ffgsgh"/>
+            <Label Text="Меню" HorizontalTextAlignment="Center"/>
             <Image Source="launcher_foreground.png" HeightRequest="100"/>
             <Label Text="ColledgeBrowser" 
                    HorizontalTextAlignment="Center"
@@ -48,7 +48,7 @@
             </Tab>
         </FlyoutItem>
 
-        <MenuItem Text="Меню" 
+        <MenuItem Text="Обновить данные" 
                   IconImageSource="icon.png" 
                   Clicked="MenuItem_Clicked"/>
         <MenuItem Text="Выход"

@@ -11,17 +11,10 @@ using AngleSharp.Dom;
 
 using CBApp2.Domain.Models;
 
-//namespace CBApp2.Domain.Services
-namespace CBApp2
+namespace CBApp2.Domain.Services
 {
     public class Parser
     {
-        private string _filePage;
-        public Parser(string path)
-        {
-            this._filePage = path;
-        }
-
         public string GetPageText(string path)
         {
             if (File.Exists(path))
@@ -57,10 +50,10 @@ namespace CBApp2
             }
         }
 
-        public List<CBApp2.Domain.Models.Element> ParsePage(bool isGroup)
+        public List<CBApp2.Domain.Models.Element> ParsePage(string pagePath, bool isGroup)
         {
-            //string PageText = GetPageTextAsync(_filePage).Result;
-            string PageText = GetPageText(_filePage);
+            //string PageText = GetPageTextAsync(pagePath).Result;
+            string PageText = GetPageText(pagePath);
             List<CBApp2.Domain.Models.Element> groups = new List<CBApp2.Domain.Models.Element>();
             List<string> names = new List<string>();
             List<string> dates = new List<string>();
@@ -89,7 +82,9 @@ namespace CBApp2
                 CBApp2.Domain.Models.Element element = new CBApp2.Domain.Models.Element();
                 Week week = tables[i].Result;
 
-                element.Name = names[i];
+                if (isGroup) element.Name = names[i];
+                else element.Name = names[i].Substring(names[i].IndexOf(" - ") + 3);
+
                 week.Element = element;
                 week.Name = dates[i];
                 week.CreateDate = DateTime.Now.ToFileTime();
@@ -101,9 +96,9 @@ namespace CBApp2
 
             return groups;
         }
-        public async Task<List<CBApp2.Domain.Models.Element>> ParsePageAsync(bool isGroup)
+        public async Task<List<CBApp2.Domain.Models.Element>> ParsePageAsync(string pagePath, bool isGroup)
         {
-            string PageText = await GetPageTextAsync(_filePage);
+            string PageText = await GetPageTextAsync(pagePath);
             List<CBApp2.Domain.Models.Element> groups = new List<CBApp2.Domain.Models.Element>();
             List<string> names = new List<string>();
             List<string> dates = new List<string>();
