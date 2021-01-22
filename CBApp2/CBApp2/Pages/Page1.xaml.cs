@@ -21,11 +21,8 @@ namespace CBApp2.Pages
         private List<Domain.Models.Element> Items { get; set; } = 
             new List<Domain.Models.Element>();
 
-        ActivityIndicator activityIndicator = new ActivityIndicator();
-
         public Page1()
         {
-            //this.FindByName<StackLayout>("mainStack").Children.Add(activityIndicator);
             InitializeComponent();
         }
 
