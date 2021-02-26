@@ -27,8 +27,9 @@ namespace CBApp2
             InitializeComponent();
 
             //File.Delete(DatabasePath);
-            
+
             MainPage = new AppShell();
+            //MainPage = new NavigationPage(new Pages.LoadingPage());
         }
 
         protected override void OnStart()

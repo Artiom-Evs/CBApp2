@@ -21,9 +21,10 @@ namespace CBApp2
         {
             App.LoadGroups = Task.Run(() => LoadGroups());
             App.LoadTeachers = Task.Run(() => LoadTeachers());
-            
+
             InitializeComponent();
         }
+        
         private async Task<bool> LoadGroups()
         {
             if (App.Connection)

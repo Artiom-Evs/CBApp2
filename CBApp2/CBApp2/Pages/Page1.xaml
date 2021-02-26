@@ -4,6 +4,7 @@
              x:Class="CBApp2.Pages.Page1">
 
     <StackLayout>
+
         <Frame BackgroundColor="#2196F3" Padding="14" CornerRadius="0">
             <Label Text="Список групп"
                    HorizontalTextAlignment="Center" 
@@ -25,5 +26,4 @@
             </ListView.ItemTemplate>
         </ListView>
     </StackLayout>
-    
 </ContentPage>
