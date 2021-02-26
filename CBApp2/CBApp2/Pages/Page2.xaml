@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CBApp2.Pages.Page2">
+
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3" Padding="14" CornerRadius="0">
+            <Label Text="Список преподавателей"
+                   HorizontalTextAlignment="Center" 
+                   TextColor="White" 
+                   FontSize="24"/>
+        </Frame>
+
+        <ListView x:Name="MyListView"
+              ItemsSource="{Binding Items}"
+              ItemTapped="MyListView_ItemTapped"
+              CachingStrategy="RecycleElement">
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding Name}" FontSize="18"/>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <!--
+    <ListView.ItemTemplate>
+      <DataTemplate>
+        <ViewCell>
+          <StackLayout>
+            <Label Text="{Binding Text}" 
+                   Style="{DynamicResource ListItemTextStyle}" />
+            <Label Text="{Binding Detail}" 
+                   Style="{DynamicResource ListItemDetailTextStyle}"/>
+          </StackLayout>
+        </ViewCell>
+      </DataTemplate>
+    </ListView.ItemTemplate>
+    -->
+        </ListView>
+    </StackLayout>
+</ContentPage>
